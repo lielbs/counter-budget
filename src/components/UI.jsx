@@ -24,13 +24,35 @@ export function Modal({ title, children, onClose }) {
   const dialog = useRef(null)
   useEffect(() => {
     const previous = document.activeElement
+    const root = document.documentElement
+    const viewport = window.visualViewport
+    const syncViewport = () => {
+      root.style.setProperty('--visual-viewport-height', `${viewport?.height || window.innerHeight}px`)
+      root.style.setProperty('--visual-viewport-top', `${viewport?.offsetTop || 0}px`)
+    }
+    root.classList.add('modal-open')
+    syncViewport()
+    viewport?.addEventListener('resize', syncViewport)
+    viewport?.addEventListener('scroll', syncViewport)
     dialog.current?.focus()
     const handler = event => event.key === 'Escape' && onClose()
     document.addEventListener('keydown', handler)
-    return () => { document.removeEventListener('keydown', handler); previous?.focus() }
+    return () => {
+      document.removeEventListener('keydown', handler)
+      viewport?.removeEventListener('resize', syncViewport)
+      viewport?.removeEventListener('scroll', syncViewport)
+      root.classList.remove('modal-open')
+      root.style.removeProperty('--visual-viewport-height')
+      root.style.removeProperty('--visual-viewport-top')
+      previous?.focus()
+    }
   }, [onClose])
+  const keepFieldVisible = event => {
+    if (!event.target.matches('input, select, textarea')) return
+    window.setTimeout(() => event.target.scrollIntoView({ block: 'center', behavior: 'smooth' }), 180)
+  }
   return <div className="modal-backdrop" role="presentation" onMouseDown={event => event.target === event.currentTarget && onClose()}>
-    <section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabIndex="-1" ref={dialog}>
+    <section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabIndex="-1" ref={dialog} onFocusCapture={keepFieldVisible}>
       <header className="modal-header"><div><span className="eyebrow">Counter</span><h2 id="modal-title">{title}</h2></div><button className="icon-button" onClick={onClose} aria-label="סגירה"><Icon name="close" /></button></header>
       {children}
     </section>

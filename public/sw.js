@@ -1,4 +1,4 @@
-const CACHE = 'counter-shell-v1'
+const CACHE = 'counter-shell-v2'
 const SHELL = ['./', './index.html', './manifest.json', './icons/icon.svg', './icons/icon-maskable.svg']
 
 self.addEventListener('install', event => {

@@ -125,3 +125,33 @@ body { background-image: radial-gradient(circle at 82% -10%, rgba(99,91,255,.12)
 @media (max-width: 520px) {
   .mini-brand { display: none; }.hero-card { min-height: 282px; align-items: flex-start; padding: 25px 22px; }.hero-copy { width: 100%; }.hero-kicker { margin-bottom: 20px; }.hero-copy > strong { font-size: 2.55rem; }.hero-orb { position: absolute; left: 20px; top: 24px; flex-basis: 76px; width: 76px; height: 76px; }.hero-orb span { font-size: .92rem; }.hero-security { margin-top: 18px; }.metric-grid article { min-height: 68px; }.level-pill { min-width: 80px; }.month-switcher { width: 100%; }.home-topbar h1 { font-size: 1.65rem; }
 }
+
+/* Mobile form reliability: prevent iOS zoom and keep fields above the keyboard. */
+html.modal-open, html.modal-open body { overflow: hidden; overscroll-behavior: none; }
+button, a, input, select, textarea { touch-action: manipulation; }
+input, select, textarea { font-size: 16px; line-height: 1.35; }
+.modal-backdrop { inset: auto 0 auto 0; top: var(--visual-viewport-top, 0px); height: var(--visual-viewport-height, 100dvh); min-height: 0; overflow: hidden; }
+.modal { max-height: calc(var(--visual-viewport-height, 100dvh) - 8px); overscroll-behavior: contain; scroll-behavior: smooth; scroll-padding-block: 92px; -webkit-overflow-scrolling: touch; }
+.modal-header { position: sticky; z-index: 4; top: -1px; margin: -4px -2px 18px; padding: 4px 2px 12px; background: color-mix(in srgb, var(--surface-solid) 96%, transparent); border-bottom: 1px solid transparent; }
+.modal:focus-within .modal-header { border-bottom-color: var(--border); }
+.modal .primary-button { min-height: 50px; }
+.app-shell:has(.modal-backdrop) .bottom-nav, .app-shell:has(.modal-backdrop) .fab { opacity: 0; pointer-events: none; transform: translateY(18px); }
+.bottom-nav, .fab { transition: opacity .18s ease, transform .2s ease; }
+.onboarding, .lock-screen { min-height: 100dvh; }
+
+@media (max-width: 520px) {
+  .modal { width: 100%; max-height: calc(var(--visual-viewport-height, 100dvh) - 4px); padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; }
+  .modal-header { margin-inline: 0; }
+  .modal .stack { gap: 13px; }
+  .modal .two-columns { grid-template-columns: 1fr; gap: 13px; }
+  .modal .two-columns.icon-name { grid-template-columns: 84px minmax(0, 1fr); }
+  .modal input, .modal select, .modal textarea { min-height: 49px; }
+  .modal textarea { min-height: 92px; }
+  .modal .amount-field input { min-height: 64px; font-size: 2rem; }
+  .transaction-row { grid-template-columns: 42px minmax(0, 1fr) auto; gap: 9px; }
+  .transaction-row .row-actions { grid-column: 2 / -1; justify-self: end; margin-top: -4px; }
+  .transaction-row .row-actions .icon-button { width: 44px; height: 44px; }
+  .budget-form label { align-items: center; }
+  .budget-form label > div { width: min(45vw, 150px); }
+  .budget-form input, .preferences input, .preferences select, .search input { font-size: 16px; }
+}
